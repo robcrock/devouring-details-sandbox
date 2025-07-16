@@ -11,10 +11,11 @@ This directory contains reusable utility functions that can be used across multi
 
 ## Usage
 
-Import utilities from `@/shared/utils/[utility-name]` to maintain consistency across prototypes.
+Import utilities using relative paths based on your component's location.
 
 ```typescript
-import { clamp, lerp, mapRange, random } from "@/shared/utils/clamp";
+// From a component in src/components/[component-name]/
+import { clamp, lerp, mapRange, random } from "../../shared/utils/clamp";
 ```
 
 ## Contributing
@@ -34,7 +35,8 @@ When creating reusable utilities:
 Clamps a value between a minimum and maximum value.
 
 ```typescript
-import { clamp } from "@/shared/utils/clamp";
+// From a component in src/components/[component-name]/
+import { clamp } from "../../shared/utils/clamp";
 
 const value = 150;
 const clamped = clamp(value, 0, 100); // Returns 100
@@ -52,7 +54,8 @@ const clamped = clamp(value, 0, 100); // Returns 100
 Linear interpolation between two values.
 
 ```typescript
-import { lerp } from "@/shared/utils/clamp";
+// From a component in src/components/[component-name]/
+import { lerp } from "../../shared/utils/clamp";
 
 const interpolated = lerp(0, 100, 0.5); // Returns 50
 ```
@@ -69,7 +72,8 @@ const interpolated = lerp(0, 100, 0.5); // Returns 50
 Maps a value from one range to another.
 
 ```typescript
-import { mapRange } from "@/shared/utils/clamp";
+// From a component in src/components/[component-name]/
+import { mapRange } from "../../shared/utils/clamp";
 
 const mapped = mapRange(50, 0, 100, 0, 1); // Returns 0.5
 ```
@@ -88,7 +92,8 @@ const mapped = mapRange(50, 0, 100, 0, 1); // Returns 0.5
 Generates a random number within a range.
 
 ```typescript
-import { random } from "@/shared/utils/clamp";
+// From a component in src/components/[component-name]/
+import { random } from "../../shared/utils/clamp";
 
 const rand = random(0, 100); // Returns random number between 0 and 100
 ```

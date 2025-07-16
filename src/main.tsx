@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+import InteractionSandbox from './components/devouring-details-sandbox'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <InteractionSandbox />
   </StrictMode>,
 )

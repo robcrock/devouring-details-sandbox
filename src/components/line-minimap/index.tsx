@@ -118,7 +118,7 @@ function Line({
     mouseX,
     scrollX,
     centerX,
-    transformer: (distance, initialValue, baseValue) => {
+    transformer: (distance, _initialValue, baseValue) => {
       const absDistance = Math.abs(distance);
       const maxDistance = 150;
       const factor = Math.max(0, 1 - absDistance / maxDistance);

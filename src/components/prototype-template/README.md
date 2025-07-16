@@ -73,7 +73,7 @@ function Instructions() {
 ### Imports and Dependencies
 
 - Use TypeScript for all components
-- Import from `@/` alias for consistency: `import { clamp } from '@/shared/utils/clamp'`
+- Use relative imports: `import { clamp } from '../../shared/utils/clamp'`
 - Use React.lazy for code splitting in registry
 - Add dependencies to registry entry
 
@@ -121,8 +121,8 @@ import { motion } from "motion/react";
 ### Using Shared Utilities
 
 ```typescript
-import { clamp, lerp } from "@/shared/utils/clamp";
-import { useAnimationFrame } from "@/shared/hooks/useAnimationFrame";
+import { clamp, lerp } from "../../shared/utils/clamp";
+import { useAnimationFrame } from "../../shared/hooks/useAnimationFrame";
 ```
 
 ## Registry Entry Example

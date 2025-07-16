@@ -120,13 +120,13 @@ const { scrollY } = useScroll();
 ### Animation Frame Loop
 
 ```typescript
-import { useAnimationFrame } from "@/shared/hooks/useAnimationFrame";
+import { useAnimationFrame } from "../../shared/hooks/useAnimationFrame";
 ```
 
 ### Value Clamping and Interpolation
 
 ```typescript
-import { clamp, lerp, mapRange } from "@/shared/utils/clamp";
+import { clamp, lerp, mapRange } from "../../shared/utils/clamp";
 ```
 
 ## Troubleshooting

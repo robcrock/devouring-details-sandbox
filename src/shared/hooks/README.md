@@ -8,10 +8,11 @@ This directory contains reusable hooks that can be used across multiple prototyp
 
 ## Usage
 
-Import hooks from `@/shared/hooks/[hook-name]` to maintain consistency across prototypes.
+Import hooks using relative paths based on your component's location.
 
 ```typescript
-import { useAnimationFrame } from "@/shared/hooks/useAnimationFrame";
+// From a component in src/components/[component-name]/
+import { useAnimationFrame } from "../../shared/hooks/useAnimationFrame";
 ```
 
 ## Contributing
@@ -31,7 +32,8 @@ When creating reusable hooks:
 Hook for running animations with requestAnimationFrame.
 
 ```typescript
-import { useAnimationFrame } from "@/shared/hooks/useAnimationFrame";
+// From a component in src/components/[component-name]/
+import { useAnimationFrame } from "../../shared/hooks/useAnimationFrame";
 
 function MyComponent() {
   useAnimationFrame((deltaTime) => {

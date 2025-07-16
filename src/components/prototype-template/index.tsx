@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'motion/react';
 
 // Import any shared utilities or hooks

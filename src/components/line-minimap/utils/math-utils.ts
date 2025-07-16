@@ -1,13 +1,5 @@
 import { DISTANCE_LIMIT } from './constants';
 
-export function lerp(start: number, end: number, factor: number): number {
-  return start + (end - start) * factor;
-}
-
-export function clamp(value: number, [min, max]: [number, number]): number {
-  return Math.min(Math.max(value, min), max);
-}
-
 export function transformScale(
   distance: number,
   initialValue: number,

@@ -39,7 +39,7 @@ The application is built around a sandbox pattern where individual UI prototypes
 
 ### Key Components
 
-- **Main Sandbox** (`src/components/sandbox/devouring-details-sandbox.tsx`): The primary application shell that provides:
+- **Main Sandbox** (`src/components/devouring-details-sandbox.tsx`): The primary application shell that provides:
   - Component registry and routing
   - Dark mode toggle
   - Responsive sidebar navigation

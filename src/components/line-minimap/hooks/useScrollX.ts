@@ -1,9 +1,8 @@
 import { useSpring, useScroll, useMotionValueEvent } from "motion/react";
 import { useRef } from "react";
 import { MAX } from '../utils/constants';
-import { clamp } from '../utils/clamp';
-import { lerp } from '../utils/math-utils';
-import { useRequestAnimationFrame } from "./useRequestAnimationFrame";
+import { clamp, lerp } from '../../../shared/utils/clamp';
+import { useAnimationFrame } from "../../../shared/hooks/useAnimationFrame";
 
 // Controls scroll speed (higher = faster)
 // Set to 1 for no smoothing at all
@@ -24,10 +23,10 @@ export function useScrollX(max = MAX) {
   const targetX = useRef(0);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    targetX.current = clamp(latest, [0, max]);
+    targetX.current = clamp(latest, 0, max);
   });
 
-  useRequestAnimationFrame(() => {
+  useAnimationFrame(() => {
     const currentX = scrollX.get();
     const smoothX = lerp(currentX, targetX.current, SCROLL_SMOOTHING);
     // Only update if there's a meaningful difference

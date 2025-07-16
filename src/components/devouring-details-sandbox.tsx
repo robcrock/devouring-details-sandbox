@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, ChevronRight, ExternalLink, Code, Github } from 'lucide-react';
+import { ChevronRight, ExternalLink, Github as GithubIcon, Loader2 } from 'lucide-react';
 
 // Component Registry - Add your course components here
 interface ComponentInfo {
@@ -38,7 +38,6 @@ const ComponentDisplay = ({ component }: { component: ComponentInfo | null }) =>
             transition={{ duration: 0.5 }}
           >
             <div className="absolute w-24 h-24 rounded-full bg-gradient-to-br from-orange/20 to-orange/5 blur-xl -inset-4"></div>
-            <Sparkles className="relative w-24 h-24 mx-auto text-gray9" />
           </motion.div>
           <motion.h2
             className="mb-3 text-2xl font-semibold text-center text-gray12"
@@ -46,7 +45,7 @@ const ComponentDisplay = ({ component }: { component: ComponentInfo | null }) =>
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            Welcome to Devouring Details
+            Welcome to Interaction Sandbox
           </motion.h2>
           <motion.p
             className="mb-8 leading-relaxed text-center text-gray11"
@@ -57,35 +56,6 @@ const ComponentDisplay = ({ component }: { component: ComponentInfo | null }) =>
             Select a prototype from the sidebar to explore its details and implementation
           </motion.p>
           
-          <motion.div
-            className="p-6 border shadow-lg bg-gray2/50 backdrop-blur-sm rounded-2xl border-gray3/30"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h3 className="mb-4 text-lg font-semibold text-gray12">Getting Started</h3>
-            <ol className="space-y-3">
-              {[
-                'Select a prototype from the sidebar',
-                'Explore the interactive prototype',
-                'Copy source files to your project',
-                'Add new components as you progress'
-              ].map((step, index) => (
-                <motion.li
-                  key={index}
-                  className="flex items-start gap-3 text-gray11"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                >
-                  <span className="text-orange font-semibold text-sm mt-0.5">
-                    {index + 1}.
-                  </span>
-                  <span className="leading-relaxed">{step}</span>
-                </motion.li>
-              ))}
-            </ol>
-          </motion.div>
         </div>
       </div>
     );
@@ -101,7 +71,7 @@ const ComponentDisplay = ({ component }: { component: ComponentInfo | null }) =>
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             >
-              <Sparkles className="w-5 h-5" />
+              <Loader2 className="w-5 h-5" />
             </motion.div>
             <span>Loading prototype...</span>
           </div>
@@ -113,7 +83,7 @@ const ComponentDisplay = ({ component }: { component: ComponentInfo | null }) =>
   );
 };
 
-export default function DevouringDetailsSandbox() {
+export default function InteractionSandbox() {
   const [activeComponent, setActiveComponent] = useState<string | null>(null);
   const [hoveredComponent, setHoveredComponent] = useState<string | null>(null);
 
@@ -128,12 +98,13 @@ export default function DevouringDetailsSandbox() {
       {/* Navigation */}
       <nav className="flex-shrink-0 h-16 border-b bg-gray1 border-gray3/50 backdrop-blur-sm">
         <div className="flex items-center h-16 px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-orange to-orange/60">
-              <Code className="w-4 h-4 text-gray1" />
-            </div>
-            <h1 className="text-xl font-semibold tracking-tight">Devouring Details</h1>
-          </div>
+          <button 
+            onClick={() => setActiveComponent(null)}
+            className="flex items-center gap-3 transition-opacity hover:opacity-80"
+          >
+            <div className="w-8 h-8 rounded-full bg-orange"></div>
+            <h1 className="text-xl font-semibold tracking-tight">Interaction Sandbox</h1>
+          </button>
         </div>
       </nav>
 
@@ -224,7 +195,7 @@ export default function DevouringDetailsSandbox() {
                     rel="noopener noreferrer"
                     className="text-sm text-gray11 hover:text-gray12 transition-colors inline-flex items-center gap-1.5 group"
                   >
-                    <Github size={14} />
+                    <GithubIcon size={14} />
                     <span>by Rauno Freiberg</span>
                     <ExternalLink size={12} className="transition-opacity opacity-0 group-hover:opacity-100" />
                   </a>

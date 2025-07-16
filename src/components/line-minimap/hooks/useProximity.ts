@@ -4,7 +4,8 @@ import {
 } from "motion/react";
 import React from "react";
 import { DEFAULT_INTENSITY } from "../utils/constants";
-import { transformScale, lerp } from "../utils/math-utils";
+import { transformScale } from "../utils/math-utils";
+import { lerp } from "../../../shared/utils/clamp";
 
 export interface ProximityOptions {
   ref: React.RefObject<HTMLElement | null>;
