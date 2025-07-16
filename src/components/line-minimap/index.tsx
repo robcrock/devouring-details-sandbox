@@ -84,9 +84,6 @@ export default function LineMinimap() {
           </div>
         </div>
       </div>
-      
-      {/* Instructions overlay */}
-      <Instructions />
     </div>
   );
 }
@@ -187,24 +184,6 @@ function Indicator({ x }: { x: MotionValue<number> }) {
       
       {/* Glow effect */}
       <div className="absolute inset-0 w-px h-full opacity-50 bg-orange blur-sm"></div>
-    </motion.div>
-  );
-}
-
-function Instructions() {
-  return (
-    <motion.div 
-      className="fixed z-20 -translate-x-1/2 bottom-8 left-1/2"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5 }}
-    >
-      <div className="px-6 py-4 border shadow-xl bg-gray2/80 backdrop-blur-md rounded-2xl border-gray3/50">
-        <p className="text-sm text-center text-gray11">
-          <span className="font-medium text-orange">Scroll</span> to explore • 
-          <span className="font-medium text-orange"> Hover</span> to interact
-        </p>
-      </div>
     </motion.div>
   );
 }

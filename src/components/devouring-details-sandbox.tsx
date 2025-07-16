@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, ChevronRight, ExternalLink, Code, BookOpen, Github } from 'lucide-react';
+import { Sparkles, ChevronRight, ExternalLink, Code, Github } from 'lucide-react';
 
 // Component Registry - Add your course components here
 interface ComponentInfo {
@@ -26,6 +26,93 @@ const componentRegistry: Record<string, ComponentInfo> = {
   // Add more components as you progress through the course
 };
 
+const ComponentDisplay = ({ component }: { component: ComponentInfo | null }) => {
+  if (!component) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="max-w-md">
+          <motion.div
+            className="relative inline-block mb-8 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="absolute w-24 h-24 rounded-full bg-gradient-to-br from-orange/20 to-orange/5 blur-xl -inset-4"></div>
+            <Sparkles className="relative w-24 h-24 mx-auto text-gray9" />
+          </motion.div>
+          <motion.h2
+            className="mb-3 text-2xl font-semibold text-center text-gray12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Welcome to Devouring Details
+          </motion.h2>
+          <motion.p
+            className="mb-8 leading-relaxed text-center text-gray11"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Select a prototype from the sidebar to explore its details and implementation
+          </motion.p>
+          
+          <motion.div
+            className="p-6 border shadow-lg bg-gray2/50 backdrop-blur-sm rounded-2xl border-gray3/30"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h3 className="mb-4 text-lg font-semibold text-gray12">Getting Started</h3>
+            <ol className="space-y-3">
+              {[
+                'Select a prototype from the sidebar',
+                'Explore the interactive prototype',
+                'Copy source files to your project',
+                'Add new components as you progress'
+              ].map((step, index) => (
+                <motion.li
+                  key={index}
+                  className="flex items-start gap-3 text-gray11"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 + index * 0.1 }}
+                >
+                  <span className="text-orange font-semibold text-sm mt-0.5">
+                    {index + 1}.
+                  </span>
+                  <span className="leading-relaxed">{step}</span>
+                </motion.li>
+              ))}
+            </ol>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  const Component = component.component;
+  return (
+    <React.Suspense
+      fallback={
+        <div className="flex items-center justify-center h-full">
+          <div className="flex items-center gap-3 text-gray11">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-5 h-5" />
+            </motion.div>
+            <span>Loading prototype...</span>
+          </div>
+        </div>
+      }
+    >
+      <Component />
+    </React.Suspense>
+  );
+};
+
 export default function DevouringDetailsSandbox() {
   const [activeComponent, setActiveComponent] = useState<string | null>(null);
   const [hoveredComponent, setHoveredComponent] = useState<string | null>(null);
@@ -35,63 +122,6 @@ export default function DevouringDetailsSandbox() {
   }, []);
 
   const categories = [...new Set(Object.values(componentRegistry).map(c => c.category))];
-
-  const ComponentDisplay = ({ component }: { component: ComponentInfo | null }) => {
-    if (!component) {
-      return (
-        <div className="flex items-center justify-center h-full">
-          <div className="max-w-md text-center">
-            <motion.div 
-              className="relative inline-block mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="absolute w-24 h-24 rounded-full bg-gradient-to-br from-orange/20 to-orange/5 blur-xl -inset-4"></div>
-              <Sparkles className="relative w-24 h-24 text-gray9" />
-            </motion.div>
-            <motion.h2 
-              className="mb-3 text-2xl font-semibold text-gray12"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              Welcome to Devouring Details
-            </motion.h2>
-            <motion.p 
-              className="leading-relaxed text-gray11"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              Select a prototype from the sidebar to explore its details and implementation
-            </motion.p>
-          </div>
-        </div>
-      );
-    }
-
-    const Component = component.component;
-    return (
-      <React.Suspense 
-        fallback={
-          <div className="flex items-center justify-center h-full">
-            <div className="flex items-center gap-3 text-gray11">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              >
-                <Sparkles className="w-5 h-5" />
-              </motion.div>
-              <span>Loading prototype...</span>
-            </div>
-          </div>
-        }
-      >
-        <Component />
-      </React.Suspense>
-    );
-  };
 
   return (
     <div className="flex flex-col h-screen bg-gray1 text-gray12">
@@ -234,14 +264,6 @@ export default function DevouringDetailsSandbox() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button className="p-2 transition-colors rounded-lg text-gray11 hover:text-gray12 hover:bg-gray2">
-                      <BookOpen size={16} />
-                    </button>
-                    <button className="p-2 transition-colors rounded-lg text-gray11 hover:text-gray12 hover:bg-gray2">
-                      <Code size={16} />
-                    </button>
-                  </div>
                 </div>
               </motion.div>
             )}
@@ -250,47 +272,12 @@ export default function DevouringDetailsSandbox() {
           {/* Component Display Area */}
           <div className="relative flex-1 bg-gray1">
             <div className="relative h-full overflow-hidden">
-              <ComponentDisplay component={activeComponent ? componentRegistry[activeComponent] : null} />
+              <ComponentDisplay
+                key={activeComponent || 'welcome'}
+                component={activeComponent ? componentRegistry[activeComponent] : null}
+              />
             </div>
           </div>
-
-          {/* Instructions */}
-          <AnimatePresence>
-            {!activeComponent && (
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="max-w-md p-8 border shadow-lg bg-gray2/50 backdrop-blur-sm rounded-2xl border-gray3/30">
-                  <h3 className="mb-6 text-xl font-semibold text-gray12">Getting Started</h3>
-                  <ol className="space-y-4">
-                    {[
-                      'Select a prototype from the sidebar',
-                      'Explore the interactive prototype',
-                      'Copy source files to your project',
-                      'Add new components as you progress'
-                    ].map((step, index) => (
-                      <motion.li 
-                        key={index}
-                        className="flex items-start gap-3 text-gray11"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <span className="text-orange font-semibold text-sm mt-0.5">
-                          {index + 1}.
-                        </span>
-                        <span className="leading-relaxed">{step}</span>
-                      </motion.li>
-                    ))}
-                  </ol>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </main>
       </div>
     </div>
