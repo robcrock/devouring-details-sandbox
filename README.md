@@ -49,7 +49,17 @@ devouring-details-sandbox/
 ├── src/
 │   ├── components/
 │   │   ├── devouring-details-sandbox.tsx  # Main sandbox UI
-│   │   ├── line-minimap.tsx              # Example component
+│   │   ├── line-minimap/                  # Line minimap component
+│   │   │   ├── index.tsx                  # Main component
+│   │   │   ├── hooks/                     # Component-specific hooks
+│   │   │   │   ├── useMouseX.ts
+│   │   │   │   ├── useProximity.ts
+│   │   │   │   ├── useRequestAnimationFrame.ts
+│   │   │   │   └── useScrollX.ts
+│   │   │   └── utils/                     # Component utilities
+│   │   │       ├── constants.ts
+│   │   │       ├── line-utils.ts
+│   │   │       └── math-utils.ts
 │   │   └── utilities/                     # Shared utilities
 │   ├── App.tsx                           # App entry point
 │   ├── main.tsx                          # Main entry point
@@ -62,7 +72,7 @@ devouring-details-sandbox/
 
 ## Adding New Components
 
-1. Create your component in `src/components/`
+1. Create your component in `src/components/` (organize complex components in folders with their utilities and hooks)
 2. Add it to the component registry in `devouring-details-sandbox.tsx`:
 
 ```typescript
@@ -94,8 +104,8 @@ The project uses a custom design system with CSS custom properties defined in `s
 - **React 19** - UI framework
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
-- **Framer Motion** - Animation library
-- **Tailwind CSS v4** - Utility-first CSS framework
+- **Motion (Framer Motion)** - Animation library
+- **Tailwind CSS v4** - Utility-first CSS framework with custom theme
 
 ## Component Guidelines
 
@@ -106,10 +116,12 @@ When creating components:
 4. Add proper documentation and examples
 5. Test across different viewport sizes (desktop-focused)
 
-## Known Issues
+## Recent Updates
 
-- Line minimap hover scaling requires proper Framer Motion setup
-- Some ESLint warnings related to React Fast Refresh
+- Refactored line-minimap component with improved file organization
+- Fixed Tailwind CSS v4 configuration for proper utility class support
+- Enhanced component rendering within the sandbox environment
+- Removed excessive animation effects for cleaner UI
 
 ## Contributing
 

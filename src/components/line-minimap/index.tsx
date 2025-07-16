@@ -1,10 +1,10 @@
 import { motion, useSpring, MotionValue } from "motion/react";
 import React from "react";
-import { 
-  useScrollX, 
-  useMouseX, 
-  isActive, 
-  useProximity,
+import { useScrollX } from "./hooks/useScrollX";
+import { useMouseX } from "./hooks/useMouseX";
+import { useProximity } from "./hooks/useProximity";
+import { isActive } from "./utils/line-utils";
+import {
   LINE_GAP,
   LINE_WIDTH,
   LINE_COUNT,
@@ -12,16 +12,16 @@ import {
   LINE_HEIGHT_ACTIVE,
   LINE_STEP,
   MAX
-} from "./line-minimap-utils";
+} from "./utils/constants";
 
 export default function LineMinimap() {
   const scrollX = useScrollX(MAX);
   const { mouseX, onPointerMove, onPointerLeave } = useMouseX();
 
   return (
-    <div className="relative" style={{ height: `calc(100vh + ${MAX}px)` }}>
+    <div className="relative w-full h-full flex items-center justify-center bg-gray1">
       <motion.div
-        className="fixed translate-center"
+        className="relative"
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
       >

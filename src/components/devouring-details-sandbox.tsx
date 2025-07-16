@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, ChevronRight, ExternalLink } from 'lucide-react';
 
@@ -37,20 +37,10 @@ const componentRegistry: Record<string, ComponentInfo> = {
 
 export default function DevouringDetailsSandbox() {
   const [activeComponent, setActiveComponent] = useState<string | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const cursorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Apply dark mode class permanently
     document.documentElement.classList.add('dark');
-  }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const categories = [...new Set(Object.values(componentRegistry).map(c => c.category))];
@@ -80,23 +70,6 @@ export default function DevouringDetailsSandbox() {
 
   return (
     <div className="h-screen bg-gray1 text-gray12 flex flex-col">
-      {/* Custom Cursor */}
-      <motion.div
-        ref={cursorRef}
-        className="fixed w-4 h-4 bg-orange rounded-full pointer-events-none z-50 mix-blend-difference"
-        animate={{
-          x: mousePos.x - 8,
-          y: mousePos.y - 8,
-        }}
-        transition={{
-          type: "spring",
-          damping: 30,
-          stiffness: 500,
-          mass: 0.5,
-        }}
-        style={{ display: 'none' }} // Enable in production with proper cursor hiding
-      />
-
       {/* Navigation */}
       <nav className="h-16 bg-gray1 border-b border-gray4 flex-shrink-0">
         <div className="flex items-center h-16 px-8">
@@ -129,8 +102,6 @@ export default function DevouringDetailsSandbox() {
                               ? 'bg-gray3 border border-gray5'
                               : 'hover:bg-gray3/30 border border-transparent'
                           }`}
-                          whileHover={{ x: 2 }}
-                          whileTap={{ scale: 0.98 }}
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex-1 pr-4">
