@@ -1,9 +1,40 @@
-import { useMotionValue, MotionValue } from "motion/react";
+import { useSpring, useScroll, useMotionValueEvent } from "motion/react";
+import { useRef } from "react";
 import { MAX } from '../utils/constants';
+import { clamp } from '../utils/clamp';
+import { lerp } from '../utils/math-utils';
+import { useRequestAnimationFrame } from "./useRequestAnimationFrame";
 
-export function useScrollX(max = MAX): MotionValue<number> {
-  const scrollX = useMotionValue(0); // Use regular motion value instead of spring
-  
-  // Keep indicator pinned at left (position 0)
-  return scrollX;
+// Controls scroll speed (higher = faster)
+// Set to 1 for no smoothing at all
+export const SCROLL_SMOOTHING = 0.5;
+
+export function useScrollX(max = MAX) {
+  const scrollX = useSpring(0, {
+    stiffness: 500,
+    damping: 40,
+    // Lower mass for faster response
+    mass: 0.8,
+  });
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll({
+    container: containerRef,
+  });
+  const targetX = useRef(0);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    targetX.current = clamp(latest, [0, max]);
+  });
+
+  useRequestAnimationFrame(() => {
+    const currentX = scrollX.get();
+    const smoothX = lerp(currentX, targetX.current, SCROLL_SMOOTHING);
+    // Only update if there's a meaningful difference
+    if (Math.abs(smoothX - currentX) > 0.01) {
+      scrollX.set(smoothX);
+    }
+  });
+
+  return { scrollX, containerRef };
 }

@@ -1,6 +1,6 @@
 // Line minimap constants
 export const LINE_GAP = 8;
-export const LINE_WIDTH = 2;
+export const LINE_WIDTH = 1;
 export const LINE_COUNT = 40;
 export const LINE_HEIGHT = 24;
 export const LINE_HEIGHT_ACTIVE = 32;

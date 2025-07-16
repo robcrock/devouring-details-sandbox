@@ -15,29 +15,38 @@ import {
 } from "./utils/constants";
 
 export default function LineMinimap() {
-  const scrollX = useScrollX(MAX);
+  const { scrollX, containerRef } = useScrollX(MAX);
   const { mouseX, onMouseMove, onMouseLeave } = useMouseX();
 
   return (
-    <div className="relative flex items-center justify-center w-full h-full bg-gray1">
-      <motion.div
-        className="relative"
-        onPointerMove={onMouseMove}
-        onPointerLeave={onMouseLeave}
+    <div className="relative w-full h-full">
+      {/* Scrollable container that's much taller than the screen */}
+      <div
+        ref={containerRef}
+        className="absolute inset-0 overflow-y-auto"
       >
-        <div className="flex items-end" style={{ gap: `${LINE_GAP}px` }}>
-          {[...Array(LINE_COUNT)].map((_, i) => (
-            <Line
-              key={i}
-              index={i}
-              scrollX={scrollX}
-              mouseX={mouseX}
-              active={isActive(i, LINE_COUNT)}
-            />
-          ))}
+        <div style={{ height: `calc(100vh + ${MAX}px)` }}>
+          {/* Fixed position minimap that stays in viewport */}
+          <motion.div
+            className="fixed -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+            onPointerMove={onMouseMove}
+            onPointerLeave={onMouseLeave}
+          >
+            <div className="flex items-end" style={{ gap: `${LINE_GAP}px` }}>
+              {[...Array(LINE_COUNT)].map((_, i) => (
+                <Line
+                  key={i}
+                  index={i}
+                  scrollX={scrollX}
+                  mouseX={mouseX}
+                  active={isActive(i, LINE_COUNT)}
+                />
+              ))}
+            </div>
+            <Indicator x={scrollX} />
+          </motion.div>
         </div>
-        <Indicator x={scrollX} />
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -86,11 +95,8 @@ function Line({
 function Indicator({ x }: { x: MotionValue<number> }) {
   return (
     <motion.div
-      className="flex flex-col bg-orange w-[1px] items-center absolute h-[100vh]!"
-      style={{
-        top: '-32px',
-        x,
-      }}
+      className="flex flex-col bg-orange w-[1px] items-center absolute h-[100vh]! -top-8"
+      style={{ x }}
     >
       <svg
         width="7"
