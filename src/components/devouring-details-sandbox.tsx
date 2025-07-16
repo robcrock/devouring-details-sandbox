@@ -59,12 +59,12 @@ export default function DevouringDetailsSandbox() {
     if (!component) {
       return (
         <div className="flex items-center justify-center h-full text-gray11">
-          <div className="text-center max-w-lg">
+          <div className="text-center max-w-lg px-8">
             <div className="mb-8 relative inline-block">
               <div className="w-32 h-32 bg-orange rounded-full blur-2xl opacity-20 absolute inset-0"></div>
               <Sparkles className="w-32 h-32 text-gray9 relative" />
             </div>
-            <p className="text-20 leading-32">Select a prototype from the sidebar to explore its details</p>
+            <p className="text-20 leading-32 px-4">Select a prototype from the sidebar to explore its details</p>
           </div>
         </div>
       );
@@ -72,7 +72,7 @@ export default function DevouringDetailsSandbox() {
 
     const Component = component.component;
     return (
-      <React.Suspense fallback={<div className="flex items-center justify-center h-full text-gray11">Loading...</div>}>
+      <React.Suspense fallback={<div className="flex items-center justify-center h-full text-gray11 p-8">Loading...</div>}>
         <Component />
       </React.Suspense>
     );
@@ -99,8 +99,8 @@ export default function DevouringDetailsSandbox() {
 
       {/* Navigation */}
       <nav className="h-16 bg-gray1 border-b border-gray4 flex-shrink-0">
-        <div className="flex items-center h-16 px-6">
-          <h1 className="text-20 font-weight-500">Devouring Details</h1>
+        <div className="flex items-center h-16 px-8">
+          <h1 className="text-20 font-weight-500 pl-4 py-2">Devouring Details</h1>
         </div>
       </nav>
 
@@ -112,10 +112,10 @@ export default function DevouringDetailsSandbox() {
             <div className="flex-1 overflow-y-auto">
               {categories.map(category => (
                 <div key={category}>
-                  <h3 className="text-11 uppercase tracking-widest font-weight-600 text-gray11 px-6 py-4 sticky top-0 bg-gray2 border-b border-gray4">
+                  <h3 className="text-11 uppercase tracking-widest font-weight-600 text-gray11 px-8 py-5 sticky top-0 bg-gray2 border-b border-gray4">
                     {category}
                   </h3>
-                  <div className="p-4 space-y-1">
+                  <div className="p-6 space-y-2">
                     {Object.entries(componentRegistry)
                       .filter(([, c]) => c.category === category)
                       .map(([key, component]) => (
@@ -124,7 +124,7 @@ export default function DevouringDetailsSandbox() {
                           onClick={() => {
                             setActiveComponent(key);
                           }}
-                          className={`w-full text-left px-4 py-5 rounded-12 transition-all relative group ${
+                          className={`w-full text-left px-6 py-6 rounded-12 transition-all relative group ${
                             activeComponent === key
                               ? 'bg-gray3 border border-gray5'
                               : 'hover:bg-gray3/30 border border-transparent'
@@ -133,15 +133,15 @@ export default function DevouringDetailsSandbox() {
                           whileTap={{ scale: 0.98 }}
                         >
                           <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="text-18 font-weight-600 mb-2 text-gray12">{component.name}</div>
-                              <div className="text-14 text-gray11 leading-22 mb-3">
+                            <div className="flex-1 pr-4">
+                              <div className="text-18 font-weight-600 mb-3 text-gray12">{component.name}</div>
+                              <div className="text-14 text-gray11 leading-24 mb-4">
                                 {component.description}
                               </div>
                               {component.principles && (
                                 <div className="flex gap-1.5 flex-wrap">
                                   {component.principles.map((principle: string) => (
-                                    <span key={principle} className="text-11 px-2.5 py-1 bg-gray3 rounded-6 text-gray11 font-weight-500">
+                                    <span key={principle} className="text-11 px-3 py-1.5 bg-gray3 rounded-6 text-gray11 font-weight-500">
                                       {principle}
                                     </span>
                                   ))}
@@ -161,7 +161,7 @@ export default function DevouringDetailsSandbox() {
 
             {/* Footer */}
             <div className="p-6 border-t border-gray4">
-              <p className="text-12 text-gray10 mb-3">
+              <p className="text-12 text-gray10 mb-4 leading-20">
                 An interactive reference for interaction-curious designers
               </p>
               <a
@@ -180,7 +180,7 @@ export default function DevouringDetailsSandbox() {
         {/* Main Content */}
         <main className="flex-1 flex flex-col h-full overflow-hidden">
           {activeComponent && (
-            <div className="border-b border-gray4 px-6 py-4 bg-gray2/50">
+            <div className="border-b border-gray4 px-8 py-6 bg-gray2/50">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-24 font-weight-500 mb-1">
@@ -209,24 +209,24 @@ export default function DevouringDetailsSandbox() {
           {/* Instructions */}
           {!activeComponent && (
             <div className="p-8 flex items-center justify-center h-full">
-              <div className="bg-gray2 rounded-16 p-8 shadow-border-medium max-w-2xl">
-                <h3 className="text-20 font-weight-500 mb-4">Getting Started</h3>
-                <ol className="space-y-3 text-15 text-gray11">
-                  <li className="flex gap-3">
-                    <span className="text-orange font-weight-500">1.</span>
-                    <span>Select a prototype from the sidebar to explore</span>
+              <div className="bg-gray2 rounded-16 p-10 shadow-border-medium max-w-2xl">
+                <h3 className="text-20 font-weight-500 mb-6">Getting Started</h3>
+                <ol className="space-y-4 text-15 text-gray11 leading-24">
+                  <li className="flex gap-4">
+                    <span className="text-orange font-weight-500 flex-shrink-0">1.</span>
+                    <span className="leading-relaxed">Select a prototype from the sidebar to explore</span>
                   </li>
-                  <li className="flex gap-3">
-                    <span className="text-orange font-weight-500">2.</span>
-                    <span>Explore the interactive prototype</span>
+                  <li className="flex gap-4">
+                    <span className="text-orange font-weight-500 flex-shrink-0">2.</span>
+                    <span className="leading-relaxed">Explore the interactive prototype</span>
                   </li>
-                  <li className="flex gap-3">
-                    <span className="text-orange font-weight-500">3.</span>
-                    <span>Copy source files and styles to your project</span>
+                  <li className="flex gap-4">
+                    <span className="text-orange font-weight-500 flex-shrink-0">3.</span>
+                    <span className="leading-relaxed">Copy source files and styles to your project</span>
                   </li>
-                  <li className="flex gap-3">
-                    <span className="text-orange font-weight-500">4.</span>
-                    <span>Add new components to componentRegistry as you progress</span>
+                  <li className="flex gap-4">
+                    <span className="text-orange font-weight-500 flex-shrink-0">4.</span>
+                    <span className="leading-relaxed">Add new components to componentRegistry as you progress</span>
                   </li>
                 </ol>
               </div>
