@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Code2, Sparkles, ChevronRight, ExternalLink } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Sparkles, ChevronRight, ExternalLink } from 'lucide-react';
 
 // Component Registry - Add your course components here
 interface ComponentInfo {
@@ -37,7 +37,6 @@ const componentRegistry: Record<string, ComponentInfo> = {
 
 export default function DevouringDetailsSandbox() {
   const [activeComponent, setActiveComponent] = useState<string | null>(null);
-  const [showCode, setShowCode] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const cursorRef = useRef<HTMLDivElement>(null);
 
@@ -196,70 +195,15 @@ export default function DevouringDetailsSandbox() {
                     ))}
                   </div>
                 </div>
-                <button
-                  onClick={() => setShowCode(!showCode)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-8 transition-all ${
-                    showCode
-                      ? 'bg-orange text-white'
-                      : 'bg-gray3 hover:bg-gray4'
-                  }`}
-                >
-                  <Code2 size={16} />
-                  <span className="text-14 font-weight-500">
-                    {showCode ? 'Hide' : 'Show'} Code
-                  </span>
-                </button>
               </div>
             </div>
           )}
 
           {/* Component Display Area */}
           <div className="flex-1 relative bg-gray1">
-            <AnimatePresence mode="wait">
-              {showCode && activeComponent ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="h-full"
-                >
-                  <div className="bg-gray2 rounded-16 p-8 h-full overflow-auto shadow-border-medium">
-                    <h3 className="text-18 font-weight-500 mb-6">Implementation Guide</h3>
-                    <div className="space-y-6 text-14 text-gray11">
-                      <div className="bg-gray3 rounded-8 p-4">
-                        <p className="font-weight-500 text-gray12 mb-2">1. Install Dependencies</p>
-                        <pre className="mt-2 p-3 bg-gray1 rounded-6 overflow-x-auto">
-                          <code>npm install {componentRegistry[activeComponent].dependencies.join(' ')}</code>
-                        </pre>
-                      </div>
-                      <div className="bg-gray3 rounded-8 p-4">
-                        <p className="font-weight-500 text-gray12 mb-2">2. Import system.css</p>
-                        <p>Add to your app root or global styles</p>
-                      </div>
-                      <div className="bg-gray3 rounded-8 p-4">
-                        <p className="font-weight-500 text-gray12 mb-2">3. Copy Component</p>
-                        <p>Copy {componentRegistry[activeComponent].source} to your project</p>
-                      </div>
-                      <div className="bg-gray3 rounded-8 p-4">
-                        <p className="font-weight-500 text-gray12 mb-2">4. Import & Use</p>
-                        <pre className="mt-2 p-3 bg-gray1 rounded-6 overflow-x-auto">
-                          <code>{`import ${componentRegistry[activeComponent].name.replace(/\s+/g, '')} from './components/${componentRegistry[activeComponent].name.replace(/\s+/g, '')}';`}</code>
-                        </pre>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="h-full relative overflow-hidden"
-                >
-                  <ComponentDisplay component={activeComponent ? componentRegistry[activeComponent] : null} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="h-full relative overflow-hidden">
+              <ComponentDisplay component={activeComponent ? componentRegistry[activeComponent] : null} />
+            </div>
           </div>
 
           {/* Instructions */}
@@ -274,7 +218,7 @@ export default function DevouringDetailsSandbox() {
                   </li>
                   <li className="flex gap-3">
                     <span className="text-orange font-weight-500">2.</span>
-                    <span>Click "Show Code" for implementation details</span>
+                    <span>Explore the interactive prototype</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="text-orange font-weight-500">3.</span>

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a React + TypeScript + Vite application that serves as an interactive sandbox for showcasing UI prototypes from the "Devouring Details" course. It provides a component gallery with code viewing capabilities and dark mode support.
+This is a React + TypeScript + Vite application that serves as an interactive sandbox for showcasing UI prototypes from the "Devouring Details" course. It provides a component gallery with dark mode support.
 
 ## Development Commands
 
@@ -35,7 +35,7 @@ tsc -b
 The application is built around a sandbox pattern where individual UI prototypes are:
 1. Registered in a component registry (`src/components/sandbox/devouring-details-sandbox.tsx`)
 2. Lazy-loaded for performance
-3. Displayed with their source code in a viewer interface
+3. Displayed in an interactive preview interface
 
 ### Key Components
 
@@ -43,7 +43,6 @@ The application is built around a sandbox pattern where individual UI prototypes
   - Component registry and routing
   - Dark mode toggle
   - Responsive sidebar navigation
-  - Code viewing functionality
   - Component preview area
 
 - **Design System** (`src/index.css`): Comprehensive CSS design tokens including:
