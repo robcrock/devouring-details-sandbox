@@ -8,5 +8,5 @@ export const LINE_STEP = LINE_WIDTH + LINE_GAP;
 export const MIN = 0;
 export const MAX = LINE_STEP * (LINE_COUNT - 1);
 export const SCROLL_SMOOTHING = 0.5;
-export const DEFAULT_INTENSITY = 50;
-export const DISTANCE_LIMIT = 200;
+export const DEFAULT_INTENSITY = 400;
+export const DISTANCE_LIMIT = 40; // Increased from 25 to 40 for wider sensitivity range

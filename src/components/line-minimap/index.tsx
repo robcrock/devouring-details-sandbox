@@ -16,14 +16,14 @@ import {
 
 export default function LineMinimap() {
   const scrollX = useScrollX(MAX);
-  const { mouseX, onPointerMove, onPointerLeave } = useMouseX();
+  const { mouseX, onMouseMove, onMouseLeave } = useMouseX();
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-gray1">
+    <div className="relative flex items-center justify-center w-full h-full bg-gray1">
       <motion.div
         className="relative"
-        onPointerMove={onPointerMove}
-        onPointerLeave={onPointerLeave}
+        onPointerMove={onMouseMove}
+        onPointerLeave={onMouseLeave}
       >
         <div className="flex items-end" style={{ gap: `${LINE_GAP}px` }}>
           {[...Array(LINE_COUNT)].map((_, i) => (
@@ -42,11 +42,11 @@ export default function LineMinimap() {
   );
 }
 
-function Line({ 
-  active, 
-  mouseX, 
-  scrollX, 
-  index 
+function Line({
+  active,
+  mouseX,
+  scrollX,
+  index
 }: {
   active: boolean;
   mouseX: MotionValue<number>;
@@ -66,13 +66,18 @@ function Line({
   });
 
   return (
-    <div
+    <motion.div
       ref={ref}
       className={active ? "bg-gray12" : "bg-gray9"}
       style={{
-        width: 1,
+        width: LINE_WIDTH,
         height: active ? LINE_HEIGHT_ACTIVE : LINE_HEIGHT,
-        transform: 'none',
+        scaleY,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 200,
+        damping: 20,
       }}
     />
   );
@@ -82,7 +87,7 @@ function Indicator({ x }: { x: MotionValue<number> }) {
   return (
     <motion.div
       className="flex flex-col bg-orange w-[1px] items-center absolute h-[100vh]!"
-      style={{ 
+      style={{
         top: '-32px',
         x,
       }}

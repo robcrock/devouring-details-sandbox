@@ -9,24 +9,21 @@ export function clamp(value: number, [min, max]: [number, number]): number {
 }
 
 export function transformScale(
-  distance: number, 
-  initialValue: number, 
-  baseValue: number, 
+  distance: number,
+  initialValue: number,
+  baseValue: number,
   intensity: number
 ): number {
   const absDistance = Math.abs(distance);
   
   if (absDistance > DISTANCE_LIMIT) {
-    return baseValue;
+    return initialValue;
   }
   
-  // More gradual scaling for better visibility
   const normalizedDistance = 1 - absDistance / DISTANCE_LIMIT;
-  const scaleFactor = Math.pow(normalizedDistance, 2); // Changed from 3 to 2 for smoother effect
+  const scaleFactor = normalizedDistance * normalizedDistance;
   
-  // Reduced maximum scale for more subtle effect
-  const maxScale = 3; // Changed from 7 to 3
-  const result = baseValue + (maxScale - baseValue) * scaleFactor;
-  
-  return result;
+  // Use intensity parameter for larger scaling effect
+  const maxScale = 2; // Adjust this value to impact the intensity of the scale
+  return baseValue + intensity * scaleFactor * (maxScale - baseValue) / 100;
 }

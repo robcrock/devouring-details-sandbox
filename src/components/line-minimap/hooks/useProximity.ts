@@ -1,57 +1,75 @@
 import {
-  MotionValue,
   useMotionValueEvent,
+  MotionValue,
 } from "motion/react";
-import * as React from "react";
-import { transformScale } from '../utils/math-utils';
-import { DEFAULT_INTENSITY } from '../utils/constants';
+import React from "react";
+import { DEFAULT_INTENSITY } from "../utils/constants";
+import { transformScale, lerp } from "../utils/math-utils";
 
-interface ProximityOptions {
+export interface ProximityOptions {
   ref: React.RefObject<HTMLElement | null>;
   baseValue: number;
   mouseX: MotionValue<number>;
   scrollX: MotionValue<number>;
   centerX: number;
   intensity?: number;
-  transformer?: typeof transformScale;
+  reset?: boolean;
+  transformer?: (
+    distance: number,
+    initialValue: number,
+    baseValue: number,
+    intensity: number
+  ) => number;
 }
 
 export function useProximity(
-  value: MotionValue<number>, 
-  options: ProximityOptions
-): void {
-  const {
+  value: MotionValue<number>,
+  {
     ref,
     baseValue,
     mouseX,
     scrollX,
     centerX,
     intensity = DEFAULT_INTENSITY,
+    reset = true,
     transformer = transformScale,
-  } = options;
-
-  const initialValueRef = React.useRef(baseValue);
+  }: ProximityOptions
+) {
+  const initialValueRef = React.useRef<number>(null);
 
   React.useEffect(() => {
-    initialValueRef.current = baseValue;
-  }, [baseValue]);
-
-  // Handle mouse proximity
-  useMotionValueEvent(mouseX, "change", (latest) => {
-    if (latest === -1) {
-      value.set(initialValueRef.current || baseValue);
-      return;
+    if (!initialValueRef.current) {
+      initialValueRef.current = value.get();
     }
-    
-    if (!ref.current) return;
-    
-    const rect = ref.current.getBoundingClientRect();
-    const elementCenterX = rect.left + rect.width / 2;
-    const distance = latest - elementCenterX;
-    const transformedValue = transformer(distance, initialValueRef.current || baseValue, baseValue, intensity);
-    
-    value.set(transformedValue);
+  }, []);
+
+  useMotionValueEvent(mouseX, "change", (latest) => {
+    const rect = ref.current!.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const distance = latest - centerX;
+    value.set(
+      transformer(distance, initialValueRef.current!, baseValue, intensity)
+    );
   });
 
-  // Removed scroll proximity handling - indicator stays fixed
+  useMotionValueEvent(scrollX, "change", (latest) => {
+    const initialValue = initialValueRef.current!;
+    const distance = latest - centerX;
+    const targetScale = transformer(
+      distance,
+      initialValue,
+      baseValue,
+      intensity
+    );
+
+    if (reset) {
+      const currentVelocity = Math.abs(scrollX.getVelocity());
+      const velocityThreshold = 300;
+      const velocityFactor = Math.min(1, currentVelocity / velocityThreshold);
+      const lerped = lerp(initialValue, targetScale, velocityFactor);
+      value.set(lerped);
+    } else {
+      value.set(targetScale);
+    }
+  });
 }
