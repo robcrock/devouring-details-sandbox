@@ -1,7 +1,7 @@
-import { motion, useSpring, MotionValue } from "motion/react";
+import { motion, useSpring, MotionValue, useMotionValue } from "motion/react";
 import React from "react";
 import { useScrollX } from "./hooks/useScrollX";
-import { useMouseX } from "./hooks/useMouseX";
+// useMouseX is no longer needed as we handle mouse events directly
 import { useProximity } from "./hooks/useProximity";
 import { isActive } from "./utils/line-utils";
 import {
@@ -16,54 +16,77 @@ import {
 
 export default function LineMinimap() {
   const { scrollX, containerRef } = useScrollX(MAX);
-  const { mouseX, onMouseMove, onMouseLeave } = useMouseX();
+  const linesContainerRef = React.useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue<number>(0);
+
+  function onMouseMove(e: React.PointerEvent) {
+    // Check if we're hovering over the lines container with both X and Y bounds
+    if (linesContainerRef.current) {
+      const rect = linesContainerRef.current.getBoundingClientRect();
+      
+      // Add vertical bounds checking - only trigger when mouse is within reasonable vertical distance
+      const verticalPadding = 50; // pixels above and below the lines
+      const isOverLines = e.clientX >= rect.left &&
+                         e.clientX <= rect.right &&
+                         e.clientY >= rect.top - verticalPadding &&
+                         e.clientY <= rect.bottom + verticalPadding;
+      
+      if (isOverLines) {
+        mouseX.set(e.clientX);
+      } else {
+        mouseX.set(0);
+      }
+    }
+  }
+
+  function onMouseLeave() {
+    mouseX.set(0);
+  }
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-gray1 via-gray1 to-gray2/20">
-      {/* Scrollable container */}
+      {/* Scrollable container - handles both scroll and mouse events */}
       <div
         ref={containerRef}
         className="absolute inset-0 overflow-y-auto"
+        onPointerMove={onMouseMove}
+        onPointerLeave={onMouseLeave}
       >
-        <div style={{ height: `calc(100vh + ${MAX}px)` }}>
-          {/* Fixed position minimap */}
-          <motion.div
-            className="fixed -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-            onPointerMove={onMouseMove}
-            onPointerLeave={onMouseLeave}
-          >
-            <div className="relative">
-              {/* Background glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-orange/5 via-transparent to-orange/5 blur-3xl -inset-x-20 -inset-y-10"></div>
-              
-              {/* Lines container */}
-              <div 
-                className="relative z-10 flex items-end" 
-                style={{ gap: `${LINE_GAP}px` }}
-              >
-                {[...Array(LINE_COUNT)].map((_, i) => (
-                  <Line
-                    key={i}
-                    index={i}
-                    scrollX={scrollX}
-                    mouseX={mouseX}
-                    active={isActive(i, LINE_COUNT)}
-                  />
-                ))}
-              </div>
-              
-              {/* Indicator */}
-              <Indicator x={scrollX} />
-              
-              {/* Progress dots */}
-              <ProgressDots scrollX={scrollX} />
+        <div style={{ height: `calc(100vh + ${MAX}px)` }} />
+      </div>
+      
+      {/* Visual elements container - positioned over scrollable area but doesn't block events */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="fixed -translate-x-1/2 -translate-y-1/2 pointer-events-none top-1/2 left-1/2">
+          <div className="relative">
+            {/* Background glow effect */}
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-orange/5 via-transparent to-orange/5 blur-3xl -inset-x-20 -inset-y-10"></div>
+            
+            {/* Lines container - individual lines handle their own pointer events */}
+            <div
+              ref={linesContainerRef}
+              className="relative z-10 flex items-end"
+              style={{ gap: `${LINE_GAP}px` }}
+            >
+              {[...Array(LINE_COUNT)].map((_, i) => (
+                <Line
+                  key={i}
+                  index={i}
+                  scrollX={scrollX}
+                  mouseX={mouseX}
+                  active={isActive(i, LINE_COUNT)}
+                />
+              ))}
             </div>
-          </motion.div>
-          
-          {/* Instructions overlay */}
-          <Instructions />
+            
+            {/* Indicator */}
+            <Indicator x={scrollX} />
+          </div>
         </div>
       </div>
+      
+      {/* Instructions overlay */}
+      <Instructions />
     </div>
   );
 }
@@ -112,7 +135,7 @@ function Line({
       className={`relative rounded-full transition-colors duration-300 ${
         active 
           ? 'bg-gradient-to-t from-orange to-orange/80 shadow-lg shadow-orange/20' 
-          : 'bg-gradient-to-t from-gray9 to-gray7 hover:from-gray8 hover:to-gray6'
+          : 'bg-gradient-to-t from-gray12 to-gray10'
       }`}
       style={{
         width: LINE_WIDTH,
@@ -136,15 +159,15 @@ function Line({
 function Indicator({ x }: { x: MotionValue<number> }) {
   return (
     <motion.div
-      className="absolute top-0 bottom-0 flex flex-col items-center pointer-events-none"
+      className="flex flex-col bg-orange w-[1px] items-center absolute h-[100vh]! -top-8"
       style={{ x }}
     >
       {/* Main indicator line */}
-      <div className="w-px h-full bg-gradient-to-b from-orange via-orange/80 to-transparent"></div>
+      <div className="w-px bg-gradient-to-b from-orange via-orange/80 to-transparent"></div>
       
       {/* Arrow head */}
       <motion.div
-        className="absolute -top-2"
+        className="absolute rotate-180 -top-3"
         animate={{ y: [0, -2, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -165,35 +188,6 @@ function Indicator({ x }: { x: MotionValue<number> }) {
       {/* Glow effect */}
       <div className="absolute inset-0 w-px h-full opacity-50 bg-orange blur-sm"></div>
     </motion.div>
-  );
-}
-
-function ProgressDots({ scrollX }: { scrollX: MotionValue<number> }) {
-  const [progress, setProgress] = React.useState(0);
-
-  React.useEffect(() => {
-    const unsubscribe = scrollX.on("change", (latest) => {
-      setProgress(latest / MAX);
-    });
-    return unsubscribe;
-  }, [scrollX]);
-
-  return (
-    <div className="absolute left-0 right-0 flex justify-center -bottom-12">
-      <div className="flex gap-2">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="w-1.5 h-1.5 rounded-full"
-            animate={{
-              scale: progress >= (i / 4) ? [1, 1.5, 1] : 1,
-              backgroundColor: progress >= (i / 4) ? 'var(--color-orange)' : 'var(--color-gray6)'
-            }}
-            transition={{ duration: 0.3 }}
-          />
-        ))}
-      </div>
-    </div>
   );
 }
 
